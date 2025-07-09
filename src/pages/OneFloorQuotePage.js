@@ -37,6 +37,7 @@ function OneFloorQuotePage() {
     { id: 1, name: "", area: "", price: 0, rentalPrice: 0 }, // 默认一个区域
   ]);
   const [topUp, setTopUp] = useState(0); // 存储 Top up 的价格
+  const rentalNum = parseFloat(rental_rate); // 使用 rental_rate 计算
 
   // 计算 EDCtotal
   const calculateEDCtotal = () => {
@@ -85,9 +86,14 @@ function OneFloorQuotePage() {
     }
 
     // Weekly Rental 的计算
-    const rentalNum = parseFloat(rental_rate); // 使用 rental_rate 计算
     if (!isNaN(perimeterNum) && !isNaN(heightNum) && !isNaN(rentalNum)) {
-      setWeeklyRental(perimeterNum * heightNum * rentalNum);
+      // 计算 weekly rental
+      let rental = perimeterNum * heightNum * rentalNum;
+
+      // 四舍五入到最接近的 5
+      rental = Math.round(rental / 5) * 5;
+
+      setWeeklyRental(rental);
     } else {
       setWeeklyRental(0);
     }
@@ -322,9 +328,6 @@ function OneFloorQuotePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-blue-300">
-      {/* 引入 Header 组件 */}
-      <Header />
-
       <main className="flex-1 flex">
         {/* 左边区域：淡蓝色 */}
         <div className="w-1/2 bg-blue-100 p-6">
