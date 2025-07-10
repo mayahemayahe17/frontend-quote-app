@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // �
 import HomePage from "./pages/HomePage"; // 引入你的 HomePage 组件
 import OneFloorQuotePage from "./pages/OneFloorQuotePage"; // 1F报价页面
 import TwoFloorQuotePage from "./pages/TwoFloorQuotePage"; // 2F报价页面
+import LoginPage from "./pages/LoginPage"; //登陆页面
+import AdminHomePage from "./pages/AdminHomePage";
 
 function App() {
   return (
@@ -17,6 +19,10 @@ function App() {
         {/* 1F报价页面 */}
         <Route path="/quote/2F" element={<TwoFloorQuotePage />} />{" "}
         {/* 2F报价页面 */}
+        <Route path="/quote/login" element={<LoginPage />} />
+        {/* 登录页面 */}
+        <Route path="/quote/adminhome" element={<AdminHomePage />} />{" "}
+        {/* 添加 AdminHomePage 路由 */}
       </Routes>
     </Router>
   );
