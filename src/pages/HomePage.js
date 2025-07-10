@@ -2,6 +2,7 @@ import React, { useState } from "react"; //导入react库，且用useState来管
 import { useNavigate } from "react-router-dom"; // 导入 useNavigate 用于跳转
 import Header from "../components/Header"; // 引入 Header 组件
 import Footer from "../components/Footer"; // 引入 Footer 组件
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 function HomePage() {
   const [company, setCompany] = useState(""); // 用户输入的公司名称
@@ -23,7 +24,7 @@ function HomePage() {
 
       // 确保 API 路径正确
       const response = await fetch(
-        `http://localhost:3000/quote?name=${cleanedCompanyName}&floor=${floor}`
+        `${API_BASE_URL}?name=${cleanedCompanyName}&floor=${floor}`
       );
 
       // 检查响应是否成功

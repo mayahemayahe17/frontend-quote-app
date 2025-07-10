@@ -38,6 +38,7 @@ function Header() {
           src="/images/logo.png"
           alt="Logo"
           className="h-20 mr-3 object-contain rounded-full"
+          onClick={() => navigate("/")} // 点击 logo 跳转到主页
         />
       </div>
 
@@ -55,7 +56,7 @@ function Header() {
             </span>
             <button
               onClick={handleLogout}
-              className="text-white bg-black p-2 rounded-full hover:bg-red-600">
+              className="text-white bg-blue-500 p-2 rounded-full hover:bg-red-600">
               Logout
             </button>
           </>

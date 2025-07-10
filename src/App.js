@@ -5,6 +5,7 @@ import OneFloorQuotePage from "./pages/OneFloorQuotePage"; // 1F报价页面
 import TwoFloorQuotePage from "./pages/TwoFloorQuotePage"; // 2F报价页面
 import LoginPage from "./pages/LoginPage"; //登陆页面
 import AdminHomePage from "./pages/AdminHomePage";
+import RateManagementPage from "./pages/RateManagementPage";
 
 function App() {
   return (
@@ -23,6 +24,11 @@ function App() {
         {/* 登录页面 */}
         <Route path="/quote/adminhome" element={<AdminHomePage />} />{" "}
         {/* 添加 AdminHomePage 路由 */}
+        <Route
+          path="/quote/rate-management"
+          element={<RateManagementPage />}
+        />{" "}
+        {/* 报价管理页面 */}
       </Routes>
     </Router>
   );
