@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom"; // 导入 useLocation 用来获取 URL 查询参数
 import Footer from "../components/Footer"; // 引入 Footer 组件
-
+import Header from "../components/Header";
 function OneFloorQuotePage() {
   const location = useLocation(); // 获取当前的 location 对象
   const { company, rate } = location.state || {}; // 获取传递的 state 数据
@@ -337,6 +337,7 @@ function OneFloorQuotePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-blue-300">
+      <Header />
       <main className="flex-1 flex">
         {/* 左边区域：淡蓝色 */}
         <div className="w-1/2 bg-blue-100 p-6">

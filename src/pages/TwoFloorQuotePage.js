@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 function TwoFloorQuotePage() {
   const location = useLocation();
@@ -436,6 +437,7 @@ function TwoFloorQuotePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-blue-300">
+      <Header />
       <main className="flex-1 flex">
         {/* 左边区域：淡蓝色 */}
         <div className="w-1/2 bg-blue-100 p-6">
