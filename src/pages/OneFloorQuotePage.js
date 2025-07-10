@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom"; // 导入 useLocation 用来获取 URL 查询参数
-import Header from "../components/Header"; // 引入 Header 组件
 import Footer from "../components/Footer"; // 引入 Footer 组件
 
 function OneFloorQuotePage() {
@@ -39,6 +38,11 @@ function OneFloorQuotePage() {
   const [topUp, setTopUp] = useState(0); // 存储 Top up 的价格
   const rentalNum = parseFloat(rental_rate); // 使用 rental_rate 计算
 
+  // Round 到最接近的 5
+  const roundToNearestFive = (num) => {
+    return Math.round(num / 5) * 5;
+  };
+
   // 计算 EDCtotal
   const calculateEDCtotal = () => {
     const edc = parseFloat(edcBase) || 0;
@@ -47,7 +51,7 @@ function OneFloorQuotePage() {
     const rail = parseFloat(gableRail) || 0;
     const platform = parseFloat(gablePlatform) || 0;
 
-    return edc + travel + overhang + rail + platform;
+    return roundToNearestFive(edc + travel + overhang + rail + platform);
   };
 
   // 计算 fullyPlanks 总价格
@@ -69,7 +73,9 @@ function OneFloorQuotePage() {
     const chimney = parseFloat(chimneyPrice) || 0;
     const top = parseFloat(topUp) || 0;
 
-    return EDCtotal + raise + edge + ply + chimney + fullyPlanksPrice + top;
+    const total =
+      EDCtotal + raise + edge + ply + chimney + fullyPlanksPrice + top;
+    return roundToNearestFive(total);
   };
 
   // 计算
@@ -80,7 +86,8 @@ function OneFloorQuotePage() {
 
     // EDC Base 的计算
     if (!isNaN(perimeterNum) && !isNaN(heightNum) && !isNaN(rateNum)) {
-      setEdcBase(perimeterNum * heightNum * rateNum);
+      const base = perimeterNum * heightNum * rateNum;
+      setEdcBase(roundToNearestFive(base));
     } else {
       setEdcBase(0);
     }
@@ -224,8 +231,10 @@ function OneFloorQuotePage() {
     if (!isNaN(area)) {
       // 计算价格
       newPlanks[index].area = area;
-      newPlanks[index].price = (area / 1.2) * 1.5 * floor_rate;
-      newPlanks[index].rentalPrice = (area / 1.2) * 1.5 * rental_rate;
+      const rawPrice = (area / 1.2) * 1.5 * floor_rate;
+      const rawRental = (area / 1.2) * 1.5 * rental_rate;
+      newPlanks[index].price = roundToNearestFive(rawPrice);
+      newPlanks[index].rentalPrice = roundToNearestFive(rawRental);
     } else {
       newPlanks[index].area = "";
       newPlanks[index].price = 0;
@@ -420,8 +429,7 @@ function OneFloorQuotePage() {
 
                 // 计算 overhang 金额（如果有输入）
                 if (value) {
-                  const price =
-                    (parseFloat(value) / 1.2) * 1.5 * (floor_rate || 0);
+                  const price = (parseFloat(value) / 1.2) * 1.5 * (14.85 || 0);
                   setOverhangPrice(parseFloat(price.toFixed(2)));
                 } else {
                   setOverhangPrice(0);
