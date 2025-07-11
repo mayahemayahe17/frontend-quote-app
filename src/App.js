@@ -6,6 +6,7 @@ import TwoFloorQuotePage from "./pages/TwoFloorQuotePage"; // 2F报价页面
 import LoginPage from "./pages/LoginPage"; //登陆页面
 import AdminHomePage from "./pages/AdminHomePage";
 import RateManagementPage from "./pages/RateManagementPage";
+import RateDetailsPage from "./pages/RateDetailsPage";
 
 function App() {
   return (
@@ -29,6 +30,8 @@ function App() {
           element={<RateManagementPage />}
         />{" "}
         {/* 报价管理页面 */}
+        <Route path="/quote/rate/:rateId" element={<RateDetailsPage />} />{" "}
+        {/* Rate细节页面 */}
       </Routes>
     </Router>
   );

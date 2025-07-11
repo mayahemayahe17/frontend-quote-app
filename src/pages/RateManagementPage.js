@@ -27,6 +27,7 @@ function RateManagementPage() {
         return res.json();
       })
       .then((data) => {
+        console.log("Rates fetched:", data.allRates);
         setRates(data.allRates);
       })
       .catch((err) => {
