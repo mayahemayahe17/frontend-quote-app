@@ -53,7 +53,13 @@ function RateDetailsPage() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setCompanies(data.companies))
+      .then((data) => {
+        const sortedCompanies = data.companies.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setCompanies(sortedCompanies);
+      })
+
       .catch((err) => console.error("Failed to load companies", err));
   }, []);
 
@@ -65,7 +71,13 @@ function RateDetailsPage() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setCompaniesInRate(data.companies))
+      .then((data) => {
+        const sorted = data.companies.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setCompaniesInRate(sorted);
+      })
+
       .catch((err) =>
         console.error("Failed to load companies for this rate", err)
       );
@@ -181,7 +193,6 @@ function RateDetailsPage() {
           .then(() => {
             setMessage("Company mapped to this rate!");
             setSelectedCompanyId("");
-            setFloorType("1F");
 
             fetch(`${API_BASE_URL}/rate/${rateId}/companies`, {
               headers: {
@@ -189,7 +200,12 @@ function RateDetailsPage() {
               },
             })
               .then((res) => res.json())
-              .then((data) => setCompaniesInRate(data.companies));
+              .then((data) => {
+                const sorted = data.companies.sort((a, b) =>
+                  a.name.localeCompare(b.name)
+                );
+                setCompaniesInRate(sorted);
+              });
           })
           .catch(() => setMessage("Mapping failed."));
       });

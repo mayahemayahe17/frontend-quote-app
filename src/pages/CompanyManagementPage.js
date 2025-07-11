@@ -9,6 +9,9 @@ function CompanyManagementPage() {
   const [showModal, setShowModal] = useState(false); // 控制弹窗显示
   const [newCompanyName, setNewCompanyName] = useState(""); // 新公司名称
   const [error, setError] = useState(""); // 错误信息
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // 每页显示多少公司
 
   // 获取所有公司及其报价
   useEffect(() => {
@@ -120,6 +123,22 @@ function CompanyManagementPage() {
       });
   };
 
+  // 排序
+  const sortedCompanies = [...companies].sort((a, b) => {
+    if (sortOrder === "asc") {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
+
+  // 分页切片
+  const totalPages = Math.ceil(sortedCompanies.length / itemsPerPage);
+  const paginatedCompanies = sortedCompanies.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header /> {/* 包含Header */}
@@ -174,37 +193,77 @@ function CompanyManagementPage() {
           <table className="min-w-full table-auto mt-12">
             <thead>
               <tr className="border-b">
-                <th className="py-2 px-4 text-left">Company Name</th>
+                <th
+                  className="py-2 px-4 text-left cursor-pointer"
+                  onClick={() => {
+                    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+                    setCurrentPage(1); // 切换排序时重置到第1页
+                  }}>
+                  Company Name {sortOrder === "asc" ? "▲" : "▼"}
+                </th>
+
                 <th className="py-2 px-4 text-left">1F Rate</th>
                 <th className="py-2 px-4 text-left">2F Rate</th>
                 <th className="py-2 px-4 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {companies.length === 0 ? (
+              {paginatedCompanies.length === 0 ? (
                 <tr>
                   <td colSpan="4" className="text-center py-4">
                     No companies available
                   </td>
                 </tr>
               ) : (
-                companies.map((company) => (
+                paginatedCompanies.map((company) => (
                   <tr key={company.id} className="border-b">
                     <td className="py-2 px-4">{company.name}</td>
                     <td className="py-2 px-4">{company.rate1F}</td>
                     <td className="py-2 px-4">{company.rate2F}</td>
                     <td className="py-2 px-4">
-                      {/* - Delete 按钮 */}
                       <button
                         onClick={() => deleteCompany(company.id)}
                         className="ml-2 text-black hover:text-red-700 text-lg">
-                        &minus; {/* 使用 &minus; 符号 */}
+                        &minus;
                       </button>
                     </td>
                   </tr>
                 ))
               )}
             </tbody>
+
+            <div className="flex justify-center mt-6 space-x-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
+                Prev
+              </button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-3 py-1 rounded ${
+                      page === currentPage
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200"
+                    }`}>
+                    {page}
+                  </button>
+                )
+              )}
+
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
+                Next
+              </button>
+            </div>
           </table>
         </div>
       </main>

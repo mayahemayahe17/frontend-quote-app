@@ -14,6 +14,7 @@ function TwoFloorQuotePage() {
     first_floor_rental_rate,
   } = rate || {};
   const isPremium = name && name.toLowerCase().includes("premium");
+  const isPeterray = name && name.toLowerCase().includes("peterray");
 
   //*****所有state*/
   //蓝色部分的const use state
@@ -705,6 +706,7 @@ function TwoFloorQuotePage() {
               />
               <span className="text-gray-500">
                 ${groundWeeklyRental.toFixed(2)}
+                {isPeterray && " (include 4 weeks rental)"}
                 {isPremium && " (include 16 weeks rental)"}
               </span>
             </div>
