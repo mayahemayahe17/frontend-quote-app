@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage"; //登陆页面
 import AdminHomePage from "./pages/AdminHomePage";
 import RateManagementPage from "./pages/RateManagementPage";
 import RateDetailsPage from "./pages/RateDetailsPage";
+import AddRatePage from "./pages/AddRatePage";
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
         {/* 报价管理页面 */}
         <Route path="/quote/rate/:rateId" element={<RateDetailsPage />} />{" "}
         {/* Rate细节页面 */}
+        <Route path="/quote/add-rate" element={<AddRatePage />} />
+        {/* 添加Rate页面 */}
       </Routes>
     </Router>
   );

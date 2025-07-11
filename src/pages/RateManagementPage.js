@@ -9,6 +9,9 @@ function RateManagementPage() {
   const [rates, setRates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [rateToDelete, setRateToDelete] = useState(null);
+
   const navigate = useNavigate();
 
   // 获取所有 rate 数据
@@ -47,6 +50,40 @@ function RateManagementPage() {
     navigate("/quote/add-rate");
   };
 
+  //点击删除函数和确认函数弹框
+  const handleDeleteClick = (rate) => {
+    setRateToDelete(rate);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (!rateToDelete) return;
+
+    fetch(`${API_BASE_URL}/rate/${rateToDelete.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to delete rate");
+        }
+        // 删除成功，从 UI 中移除
+        setRates((prevRates) =>
+          prevRates.filter((r) => r.id !== rateToDelete.id)
+        );
+        setShowDeleteModal(false);
+        setRateToDelete(null);
+      })
+      .catch((err) => {
+        console.error("Error deleting rate:", err);
+        setShowDeleteModal(false);
+        setRateToDelete(null);
+      });
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
@@ -80,12 +117,19 @@ function RateManagementPage() {
                 .map((rate) => (
                   <div
                     key={rate.id}
-                    className="flex items-center justify-start">
-                    <span className="w-3 h-3 bg-yellow-400 rounded-full mr-3" />
+                    className="flex items-center justify-between">
+                    <div className="flex items-center w-full">
+                      <span className="w-3 h-3 bg-yellow-400 rounded-full mr-3" />
+                      <button
+                        onClick={() => handleRateClick(rate.id)}
+                        className="bg-white shadow-md px-4 py-1 rounded-xl hover:bg-blue-50 transition w-full text-left text-sm">
+                        {rate.name.trim()}
+                      </button>
+                    </div>
                     <button
-                      onClick={() => handleRateClick(rate.id)}
-                      className="bg-white shadow-md px-4 py-1 rounded-xl hover:bg-blue-50 transition w-full text-left text-sm">
-                      {rate.name.trim()}
+                      onClick={() => handleDeleteClick(rate)}
+                      className="ml-2 text-black hover:text-red-700 text-lg">
+                      &minus;
                     </button>
                   </div>
                 ))}
@@ -98,12 +142,19 @@ function RateManagementPage() {
                 .map((rate) => (
                   <div
                     key={rate.id}
-                    className="flex items-center justify-start">
-                    <span className="w-3 h-3 bg-green-500 rounded-full mr-3" />
+                    className="flex items-center justify-between">
+                    <div className="flex items-center w-full">
+                      <span className="w-3 h-3 bg-green-400 rounded-full mr-3" />
+                      <button
+                        onClick={() => handleRateClick(rate.id)}
+                        className="bg-white shadow-md px-4 py-1 rounded-xl hover:bg-blue-50 transition w-full text-left text-sm">
+                        {rate.name.trim()}
+                      </button>
+                    </div>
                     <button
-                      onClick={() => handleRateClick(rate.id)}
-                      className="bg-white shadow-md px-4 py-1 rounded-xl hover:bg-blue-50 transition w-full text-left text-sm">
-                      {rate.name.trim()}
+                      onClick={() => handleDeleteClick(rate)}
+                      className="ml-2 text-black-500 hover:text-red-700 text-lg">
+                      &minus;
                     </button>
                   </div>
                 ))}
@@ -111,6 +162,32 @@ function RateManagementPage() {
           </div>
         </div>
       </main>
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+            <p className="text-gray-800 mb-4">
+              Are you sure you want to delete{" "}
+              <strong>{rateToDelete?.name}</strong>?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={confirmDelete}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                Yes, Delete
+              </button>
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setRateToDelete(null);
+                }}
+                className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
