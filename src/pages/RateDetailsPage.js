@@ -204,189 +204,189 @@ function RateDetailsPage() {
           alt="Background"
           className="w-full h-full object-cover absolute inset-0 z-0"
         />
-        <div className="relative z-10 bg-white bg-opacity-90 rounded-xl shadow-lg p-12 w-full max-w-4xl mx-auto min-h-screen">
-          <h2 className="text-2xl font-semibold text-center mb-6">
-            Rate Details - ID #{rateId}
-          </h2>
+        <div className="relative z-10 bg-white bg-opacity-90 rounded-xl shadow-lg p-12 w-full max-w-7xl mx-auto min-h-screen grid grid-cols-2 gap-8">
+          {/* 左侧: Rate Details */}
+          <div>
+            <h2 className="text-2xl font-semibold text-center mb-6">
+              Rate Details - ID #{rateId}
+            </h2>
 
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
-            <>
-              {message && (
-                <div className="mb-4 text-center text-green-600">{message}</div>
-              )}
-
-              {rate ? (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-1">
-                      Name (readonly):{" "}
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full border p-2 rounded"
-                      value={form.name || ""}
-                      readOnly // 设置只读，不能编辑
-                    />
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <>
+                {message && (
+                  <div className="mb-4 text-center text-green-600">
+                    {message}
                   </div>
+                )}
 
-                  {/* 显示字段，如果有值才渲染 */}
-                  {Object.entries(form)
-                    .filter(([key]) => {
-                      const lowerName = form.name?.toLowerCase() || "";
-                      if (lowerName.includes("1f")) {
-                        return [
-                          "id",
+                {rate ? (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm text-gray-600 mb-1">
+                        Name (readonly):{" "}
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full border p-2 rounded"
+                        value={form.name || ""}
+                        readOnly
+                      />
+                    </div>
 
-                          "floor_rate",
-                          "rental_rate",
-                          "gable_rate",
-                        ].includes(key);
-                      }
-                      if (lowerName.includes("2f")) {
-                        return [
-                          "id",
-
-                          "ground_floor_rate",
-                          "ground_floor_rental_rate",
-                          "first_floor_rate",
-                          "first_floor_rental_rate",
-                        ].includes(key);
-                      }
-                      // 默认：不显示任何字段（防止异常情况）
-                      return false;
-                    })
-                    .map(([key, value]) => (
-                      <div key={key}>
-                        <label className="block text-sm text-gray-600 mb-1">
-                          {key.replace(/_/g, " ")}:
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full border p-2 rounded"
-                          value={value || ""}
-                          disabled={key === "id" || !isEditing}
-                          onChange={(e) => handleChange(key, e.target.value)}
-                        />
-                      </div>
-                    ))}
-
-                  {isEditing ? (
-                    <button
-                      onClick={handleSave}
-                      className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                      Save Changes
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                      Edit
-                    </button>
-                  )}
-
-                  <hr className="my-6" />
-
-                  {/* 添加公司 */}
-                  <h3 className="text-xl font-semibold mb-2">
-                    Add Company to this Rate
-                  </h3>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <select
-                      className="border p-2 rounded"
-                      value={selectedCompanyId}
-                      onChange={(e) => setSelectedCompanyId(e.target.value)}>
-                      <option value="">Select Company</option>
-                      {companies.map((company) => (
-                        <option key={company.id} value={company.id}>
-                          {company.name}
-                        </option>
+                    {/* 显示字段，如果有值才渲染 */}
+                    {Object.entries(form)
+                      .filter(([key]) => {
+                        const lowerName = form.name?.toLowerCase() || "";
+                        if (lowerName.includes("1f")) {
+                          return [
+                            "id",
+                            "floor_rate",
+                            "rental_rate",
+                            "gable_rate",
+                          ].includes(key);
+                        }
+                        if (lowerName.includes("2f")) {
+                          return [
+                            "id",
+                            "ground_floor_rate",
+                            "ground_floor_rental_rate",
+                            "first_floor_rate",
+                            "first_floor_rental_rate",
+                          ].includes(key);
+                        }
+                        return false;
+                      })
+                      .map(([key, value]) => (
+                        <div key={key}>
+                          <label className="block text-sm text-gray-600 mb-1">
+                            {key.replace(/_/g, " ")}:
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full border p-2 rounded"
+                            value={value || ""}
+                            disabled={key === "id" || !isEditing}
+                            onChange={(e) => handleChange(key, e.target.value)}
+                          />
+                        </div>
                       ))}
-                    </select>
 
-                    <input
-                      className="border p-2 rounded bg-gray-100 text-gray-700 cursor-default"
-                      value={floorType}
-                      readOnly
-                    />
-
-                    <button
-                      onClick={handleMapCompany}
-                      className="col-span-2 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">
-                      Add Company to Rate
-                    </button>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2">
-                      Companies Under this Rate
-                    </h3>
-                    {companiesInRate && companiesInRate.length > 0 ? (
-                      <ul className="space-y-2">
-                        {companiesInRate.map((company) => (
-                          <li
-                            key={company.id}
-                            className="flex justify-between items-center">
-                            <span>{company.name}</span>
-                            <button
-                              className="text-red-600 hover:underline text-sm"
-                              onClick={() => handleUnmapCompany(company.id)}>
-                              Delete
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
+                    {isEditing ? (
+                      <button
+                        onClick={handleSave}
+                        className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                        Save Changes
+                      </button>
                     ) : (
-                      <p>No companies mapped to this rate.</p>
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Edit
+                      </button>
                     )}
                   </div>
-                </div>
-              ) : (
-                <p className="text-red-500 text-center">Rate not found.</p>
-              )}
-            </>
-          )}
-        </div>
+                ) : (
+                  <p className="text-red-500 text-center">Rate not found.</p>
+                )}
+              </>
+            )}
+          </div>
 
-        {/* 弹框部分 */}
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-              <p className="text-gray-800 mb-4">{modalMessage}</p>
+          {/* 右侧: Company Management */}
+          <div>
+            <h3 className="text-xl font-semibold mb-2">
+              Add Company to this Rate
+            </h3>
+
+            <div className="grid grid-cols-2 gap-4">
+              <select
+                className="border p-2 rounded"
+                value={selectedCompanyId}
+                onChange={(e) => setSelectedCompanyId(e.target.value)}>
+                <option value="">Select Company</option>
+                {companies.map((company) => (
+                  <option key={company.id} value={company.id}>
+                    {company.name}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                className="border p-2 rounded bg-gray-100 text-gray-700 cursor-default"
+                value={floorType}
+                readOnly
+              />
+
               <button
-                onClick={() => setShowModal(false)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                OK
+                onClick={handleMapCompany}
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-indigo-600 max-w-[150px] truncate">
+                Add Company
+              </button>
+            </div>
+
+            <h3 className="text-xl font-semibold mb-2 mt-6">
+              Companies Under this Rate
+            </h3>
+            {companiesInRate && companiesInRate.length > 0 ? (
+              <ul className="space-y-2">
+                {companiesInRate.map((company) => (
+                  <li
+                    key={company.id}
+                    className="flex justify-between items-center">
+                    <span>{company.name}</span>
+                    <button
+                      className="text-red-600 hover:underline text-sm"
+                      onClick={() => handleUnmapCompany(company.id)}>
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No companies mapped to this rate.</p>
+            )}
+          </div>
+        </div>
+      </main>
+
+      {/* 弹框部分 */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+            <p className="text-gray-800 mb-4">{modalMessage}</p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+            <p className="text-gray-800 mb-4">
+              Are you sure you want to remove{" "}
+              <strong>{companyToDelete?.name}</strong> from this rate?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={confirmDelete}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                Yes, Delete
+              </button>
+              <button
+                onClick={cancelDelete}
+                className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+                Cancel
               </button>
             </div>
           </div>
-        )}
-
-        {showDeleteModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-              <p className="text-gray-800 mb-4">
-                Are you sure you want to remove{" "}
-                <strong>{companyToDelete?.name}</strong> from this rate?
-              </p>
-              <div className="flex justify-center gap-4">
-                <button
-                  onClick={confirmDelete}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                  Yes, Delete
-                </button>
-                <button
-                  onClick={cancelDelete}
-                  className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </main>
+        </div>
+      )}
 
       <Footer />
     </div>
