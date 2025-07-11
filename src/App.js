@@ -8,6 +8,7 @@ import AdminHomePage from "./pages/AdminHomePage";
 import RateManagementPage from "./pages/RateManagementPage";
 import RateDetailsPage from "./pages/RateDetailsPage";
 import AddRatePage from "./pages/AddRatePage";
+import CompanyManagementPage from "./pages/CompanyManagementPage";
 
 function App() {
   return (
@@ -35,6 +36,11 @@ function App() {
         {/* Rate细节页面 */}
         <Route path="/quote/add-rate" element={<AddRatePage />} />
         {/* 添加Rate页面 */}
+        {/* 公司管理 */}
+        <Route
+          path="/quote/company-management"
+          element={<CompanyManagementPage />}
+        />
       </Routes>
     </Router>
   );
