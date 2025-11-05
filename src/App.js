@@ -1,42 +1,59 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // 从 react-router-dom 导入 BrowserRouter 和 Routes
-import HomePage from "./pages/HomePage"; // 引入你的 HomePage 组件
-import OneFloorQuotePage from "./pages/OneFloorQuotePage"; // 1F报价页面
-import TwoFloorQuotePage from "./pages/TwoFloorQuotePage"; // 2F报价页面
-import LoginPage from "./pages/LoginPage"; //登陆页面
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import OneFloorQuotePage from "./pages/OneFloorQuotePage";
+import TwoFloorQuotePage from "./pages/TwoFloorQuotePage";
+import LoginPage from "./pages/LoginPage";
 import AdminHomePage from "./pages/AdminHomePage";
 import RateManagementPage from "./pages/RateManagementPage";
 import RateDetailsPage from "./pages/RateDetailsPage";
 import AddRatePage from "./pages/AddRatePage";
 import CompanyManagementPage from "./pages/CompanyManagementPage";
 
+// 登录有效期设置为 1 小时
+const TOKEN_EXPIRY = 3600 * 1000;
+
+// 登录检查函数
+function checkLogin() {
+  const token = localStorage.getItem("authToken");
+  const loginTime = localStorage.getItem("loginTime");
+
+  if (!token || !loginTime || Date.now() - loginTime > TOKEN_EXPIRY) {
+    // 超时或未登录，清除信息并跳转登录页
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("loginTime");
+    window.location.href = "/quote/login";
+  }
+}
+
 function App() {
+  useEffect(() => {
+    checkLogin(); // 每次页面加载时检查登录状态
+
+    // 可选：用户操作刷新登录时间
+    const refreshLoginTime = () => {
+      if (localStorage.getItem("authToken")) {
+        localStorage.setItem("loginTime", Date.now());
+      }
+    };
+    document.addEventListener("click", refreshLoginTime);
+
+    // 清理事件监听
+    return () => document.removeEventListener("click", refreshLoginTime);
+  }, []);
+
   return (
     <Router>
-      {" "}
-      {/* 使用 BrowserRouter（Router 的别名） */}
       <Routes>
-        {" "}
-        {/* 使用 Routes 代替 Switch */}
-        <Route path="/" element={<HomePage />} /> {/* 主页路由 */}
-        <Route path="/quote/1F" element={<OneFloorQuotePage />} />{" "}
-        {/* 1F报价页面 */}
-        <Route path="/quote/2F" element={<TwoFloorQuotePage />} />{" "}
-        {/* 2F报价页面 */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/quote/1F" element={<OneFloorQuotePage />} />
+        <Route path="/quote/2F" element={<TwoFloorQuotePage />} />
         <Route path="/quote/login" element={<LoginPage />} />
-        {/* 登录页面 */}
-        <Route path="/quote/adminhome" element={<AdminHomePage />} />{" "}
-        {/* 添加 AdminHomePage 路由 */}
-        <Route
-          path="/quote/rate-management"
-          element={<RateManagementPage />}
-        />{" "}
-        {/* 报价管理页面 */}
-        <Route path="/quote/rate/:rateId" element={<RateDetailsPage />} />{" "}
-        {/* Rate细节页面 */}
+        <Route path="/quote/adminhome" element={<AdminHomePage />} />
+        <Route path="/quote/rate-management" element={<RateManagementPage />} />
+        <Route path="/quote/rate/:rateId" element={<RateDetailsPage />} />
         <Route path="/quote/add-rate" element={<AddRatePage />} />
-        {/* 添加Rate页面 */}
-        {/* 公司管理 */}
         <Route
           path="/quote/company-management"
           element={<CompanyManagementPage />}

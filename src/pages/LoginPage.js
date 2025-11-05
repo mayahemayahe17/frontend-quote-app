@@ -57,6 +57,7 @@ function LoginPage() {
         // 登录成功，存储 token
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("username", username); // 保存用户名
+        localStorage.setItem("loginTime", Date.now()); // 保存登录时间戳
         // 跳转到 Admin Home 页
         navigate("/quote/adminhome");
       }
