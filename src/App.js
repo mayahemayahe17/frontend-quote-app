@@ -18,13 +18,14 @@ function checkLogin() {
   const token = localStorage.getItem("authToken");
   const loginTime = localStorage.getItem("loginTime");
 
-  if (!token || !loginTime || Date.now() - loginTime > TOKEN_EXPIRY) {
-    // 超时或未登录，清除信息并跳转登录页
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("username");
-    localStorage.removeItem("loginTime");
-    window.location.href = "/quote/login";
-  }
+  if ((!token || !loginTime || Date.now() - loginTime > TOKEN_EXPIRY) &&
+    window.location.pathname !== "/quote/login") {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("username");
+  localStorage.removeItem("loginTime");
+  window.location.href = "/quote/login";
+}
+
 }
 
 function App() {
